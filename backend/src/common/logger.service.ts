@@ -2,6 +2,7 @@ import winston from 'winston';
 
 const { combine, timestamp, json, printf } = winston.format;
 const timestampFormat = 'MM-DD-YYYY HH:mm:ss';
+
 export const Logger = winston.createLogger({
   format: combine(
     timestamp({ format: timestampFormat }),

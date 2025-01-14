@@ -1,13 +1,10 @@
-import ErrorHandler, {
-  CustomError,
-  HttpCustomError,
-  NotFoundError,
-} from '@middlewares/error.middleware';
-import { Logger } from '@services/logger.service';
+import { Logger } from '@common/logger.service';
+import ErrorHandler, { NotFoundError } from '@middlewares/error.middleware';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, NextFunction, Request, Response } from 'express';
+import { RouteName, routesV1 } from './routes';
 
 dotenv.config();
 
@@ -18,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/api-status', (req: Request, res: Response) => {
+app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     status: true,
     data: {
@@ -27,12 +24,8 @@ app.get('/api-status', (req: Request, res: Response) => {
   });
 });
 
-app.get('/error', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    throw new CustomError(500, 'errors');
-  } catch (err) {
-    next(err as HttpCustomError);
-  }
+routesV1.forEach((route: RouteName) => {
+  app.use(route.name, route.router);
 });
 
 app.get('*', (req: Request, res: Response, next: NextFunction) => {

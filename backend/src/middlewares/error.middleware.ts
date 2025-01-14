@@ -1,4 +1,4 @@
-import { Logger } from '@services/logger.service';
+import { Logger } from '@common/logger.service';
 import { NextFunction, Request, Response } from 'express';
 
 export interface HttpCustomError extends Error {
