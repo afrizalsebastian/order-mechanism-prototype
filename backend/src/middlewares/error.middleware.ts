@@ -5,6 +5,19 @@ export interface HttpCustomError extends Error {
   status?: number;
 }
 
+export class UnauthorizedError implements HttpCustomError {
+  status?: number | undefined;
+  name: string;
+  message: string;
+  stack?: string | undefined;
+
+  constructor(message?: string) {
+    this.status = 401;
+    this.name = 'UnauthorizedError';
+    this.message = message || 'Unauthorized';
+  }
+}
+
 export class BadRequestError implements HttpCustomError {
   status?: number | undefined;
   name: string;
@@ -66,7 +79,7 @@ const ErrorHandler = (
   const statusCode = err.status || 500;
   const message = err.message || 'Internal Server Error';
 
-  Logger.error(`[${statusCode}] ${message}`);
+  Logger.error(`[${statusCode}]-[${req.url}] ${message}`);
   res.status(statusCode).json({
     status: false,
     error: message,
